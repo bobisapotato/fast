@@ -86,6 +86,28 @@ export class Dialog extends FASTElement {
     }
 
     /**
+     * The method to show the dialog.
+     *
+     * @public
+     */
+    public show(): void {
+        if (this.hidden) {
+            this.hidden = false;
+        }
+    }
+
+    /**
+     * The method to hide the dialog.
+     *
+     * @public
+     */
+    public hide(): void {
+        if (!this.hidden) {
+            this.hidden = true;
+        }
+    }
+
+    /**
      * @internal
      */
     public connectedCallback(): void {
