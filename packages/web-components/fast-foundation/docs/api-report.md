@@ -251,7 +251,7 @@ export class DataGrid extends FASTElement {
 
 // @public
 export class DataGridCell extends FASTElement {
-    columnData: DataGridColumn;
+    columnData: DataGridColumn | null;
     // @internal (undocumented)
     connectedCallback(): void;
     // @internal (undocumented)
@@ -310,7 +310,7 @@ export class DataGridHeader extends FASTElement {
 
 // @public
 export class DataGridHeaderCell extends FASTElement {
-    columnData: DataGridColumn;
+    columnData: DataGridColumn | null;
     // @internal (undocumented)
     connectedCallback(): void;
     // @internal (undocumented)
