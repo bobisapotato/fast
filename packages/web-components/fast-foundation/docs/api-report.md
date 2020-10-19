@@ -230,7 +230,6 @@ export class DataGrid extends FASTElement {
     focusColumnIndex: number;
     focusRowIndex: number;
     static generateColumns: (row: object) => DataGridColumn[];
-    // (undocumented)
     generateHeader: boolean;
     static generateTemplateColumns(columnsData: DataGridColumn[]): string;
     gridTemplateColumns: string;
@@ -348,6 +347,7 @@ export class DataGridRow extends FASTElement {
     isActiveRow: boolean;
     rowData: object | null;
     rowIndex: number;
+    rowType: rowType;
     // @internal (undocumented)
     slottedCellElements: HTMLElement[];
     }
@@ -701,6 +701,14 @@ export const RadioGroupTemplate: import("@microsoft/fast-element").ViewTemplate<
 
 // @public
 export const RadioTemplate: import("@microsoft/fast-element").ViewTemplate<Radio, any>;
+
+// @public
+export enum rowType {
+    // (undocumented)
+    default = "default",
+    // (undocumented)
+    header = "header"
+}
 
 // @public
 export class Skeleton extends FASTElement {
