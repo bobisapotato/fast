@@ -15,7 +15,6 @@ import { Checkbox } from '@microsoft/fast-foundation';
 import { ColorRGBA64 } from '@microsoft/fast-colors';
 import { DataGrid } from '@microsoft/fast-foundation';
 import { DataGridCell } from '@microsoft/fast-foundation';
-import { DataGridHeader } from '@microsoft/fast-foundation';
 import { DataGridHeaderCell } from '@microsoft/fast-foundation';
 import { DataGridRow } from '@microsoft/fast-foundation';
 import { DesignSystemProvider } from '@microsoft/fast-foundation';
@@ -237,9 +236,6 @@ export const DataGridCellStyles: import("@microsoft/fast-element").ElementStyles
 export const DataGridHeaderCellStyles: import("@microsoft/fast-element").ElementStyles;
 
 // @public
-export const DataGridHeaderStyles: import("@microsoft/fast-element").ElementStyles;
-
-// @public
 export const DataGridRowStyles: import("@microsoft/fast-element").ElementStyles;
 
 // @public
@@ -295,10 +291,6 @@ export class FASTDataGrid extends DataGrid {
 
 // @public
 export class FASTDataGridCell extends DataGridCell {
-}
-
-// @public
-export class FASTDataGridHeader extends DataGridHeader {
 }
 
 // @public
