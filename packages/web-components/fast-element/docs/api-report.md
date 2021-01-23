@@ -108,12 +108,11 @@ export class BindingBehavior implements Behavior {
 }
 
 // @public
-export class BindingDirective extends Directive {
+export class BindingDirective extends NamedTargetDirective {
     constructor(binding: Binding);
     // (undocumented)
     binding: Binding;
     createBehavior(target: Node): BindingBehavior;
-    createPlaceholder: (index: number) => string;
     targetAtContent(): void;
     get targetName(): string | undefined;
     set targetName(value: string | undefined);
@@ -172,6 +171,11 @@ export function compileTemplate(template: HTMLTemplateElement, directives: Reado
 
 // @public
 export type ComposableStyles = string | ElementStyles | CSSStyleSheet;
+
+// @public
+export type Constructable<T = {}> = {
+    new (...args: any[]): T;
+};
 
 // @public
 export class Controller extends PropertyChangeNotifier {
@@ -272,6 +276,9 @@ export interface ElementViewTemplate {
 export const emptyArray: readonly never[];
 
 // @public
+export function enableArrayObservation(): void;
+
+// @public
 export class ExecutionContext<TParent = any, TGrandparent = any> {
     get event(): Event;
     index: number;
@@ -352,6 +359,12 @@ export type Mutable<T> = {
 };
 
 // @public
+export abstract class NamedTargetDirective extends Directive {
+    createPlaceholder: (index: number) => string;
+    abstract targetName: string | undefined;
+}
+
+// @public
 export interface NodeBehaviorOptions<T = any> {
     filter?(value: Node, index: number, array: Node[]): boolean;
     property: T;
@@ -414,14 +427,12 @@ export class RefBehavior implements Behavior {
 }
 
 // @public
-export function repeat<TSource = any, TItem = any>(itemsBinding: Binding<TSource, TItem[]>, templateOrTemplateBinding: SyntheticViewTemplate | Binding<TSource, SyntheticViewTemplate>, options?: RepeatOptions): CaptureType<TSource>;
+export function repeat<TSource = any, TItem = any>(itemsBinding: Binding<TSource, readonly TItem[]>, templateOrTemplateBinding: SyntheticViewTemplate | Binding<TSource, SyntheticViewTemplate>, options?: RepeatOptions): CaptureType<TSource>;
 
 // @public
 export class RepeatBehavior<TSource = any> implements Behavior, Subscriber {
     constructor(location: Node, itemsBinding: Binding<TSource, any[]>, isItemsBindingVolatile: boolean, templateBinding: Binding<TSource, SyntheticViewTemplate>, isTemplateBindingVolatile: boolean, options: RepeatOptions);
     bind(source: TSource, context: ExecutionContext): void;
-    // Warning: (ae-forgotten-export) The symbol "Splice" needs to be exported by the entry point index.d.ts
-    //
     // @internal (undocumented)
     handleChange(source: any, args: Splice[]): void;
     unbind(): void;
@@ -457,6 +468,13 @@ export class SlottedBehavior extends NodeObservationBehavior<SlottedBehaviorOpti
 
 // @public
 export interface SlottedBehaviorOptions<T = any> extends NodeBehaviorOptions<T>, AssignedNodesOptions {
+}
+
+// @public
+export interface Splice {
+    addedCount: number;
+    index: number;
+    removed: any[];
 }
 
 // @public
