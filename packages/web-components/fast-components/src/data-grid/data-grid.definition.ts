@@ -1,16 +1,18 @@
 import { GenerateHeaderOptions } from "@microsoft/fast-foundation/dist/esm/data-grid/data-grid.options";
 import { DataType } from "@microsoft/fast-tooling";
-import { WebComponentDefinition } from "@microsoft/fast-tooling/dist/data-utilities/web-component";
+import type { WebComponentDefinition } from "@microsoft/fast-tooling/dist/esm/data-utilities/web-component";
 
 export const fastDataGridDefinition: WebComponentDefinition = {
     version: 1,
     tags: [
         {
             name: "fast-data-grid",
+            title: "Data grid",
             description: "The FAST data grid element",
             attributes: [
                 {
                     name: "generate-header",
+                    title: "Generate header",
                     description: "Whether the grid should auto generate a header row",
                     type: DataType.boolean,
                     default: true,
@@ -18,8 +20,9 @@ export const fastDataGridDefinition: WebComponentDefinition = {
                 },
                 {
                     name: "grid-template-columns",
+                    title: "Grid template columns",
                     description:
-                        "String that gets applied to the the css gridTemplateColumns attribute of child rows",
+                        "Value that gets applied to the the css gridTemplateColumns attribute of child rows",
                     type: DataType.string,
                     values: [
                         { name: GenerateHeaderOptions.none },
@@ -33,7 +36,8 @@ export const fastDataGridDefinition: WebComponentDefinition = {
             slots: [
                 {
                     name: "",
-                    description: "The default slot",
+                    title: "Default slot",
+                    description: "The content as data grid rows",
                 },
             ],
         },

@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-element@0.22.2...@microsoft/fast-element@1.0.0) (2021-03-06)
+
+
+* refactor(fast-element)!: rename Directive, disambiguate types, and reorganize (#4414) ([a96d364](https://github.com/Microsoft/fast/commit/a96d364af74524cb40cf8a8dfe220e4fe3c1e75a)), closes [#4414](https://github.com/Microsoft/fast/issues/4414)
+
+
+### Features
+
+* adds CSSDirective for use with the css tagged template literal ([#4383](https://github.com/Microsoft/fast/issues/4383)) ([6928afa](https://github.com/Microsoft/fast/commit/6928afae5b3734997bc8065b16c000e4965542d1))
+
+
+### BREAKING CHANGES
+
+* rename Directive and other types to disambiguate
+
+
+
+
+
+## [0.22.2](https://github.com/Microsoft/fast/compare/@microsoft/fast-element@0.22.0...@microsoft/fast-element@0.22.2) (2021-02-08)
+
+**Note:** Version bump only for package @microsoft/fast-element
+
+
+
+
+
+## [0.22.1](https://github.com/Microsoft/fast/compare/@microsoft/fast-element@0.22.0...@microsoft/fast-element@0.22.1) (2021-02-08)
+
+**Note:** Version bump only for package @microsoft/fast-element
+
+
+
+
+
+# [0.22.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-element@0.21.1...@microsoft/fast-element@0.22.0) (2021-01-30)
+
+
+### Bug Fixes
+
+* increase sophistication of behavior binding and unbinding ([#4288](https://github.com/Microsoft/fast/issues/4288)) ([9c24ee6](https://github.com/Microsoft/fast/commit/9c24ee6f865673cfa8f32ae5141f139484d79f73))
+* **repeat:** observe arrays after unbound then rebound ([#4211](https://github.com/Microsoft/fast/issues/4211)) ([cec8e69](https://github.com/Microsoft/fast/commit/cec8e69d3b72b672605bf3f77a702ca0d6ba1a5b))
+
+
+### Features
+
+* add support for attachment test to ElementStyles ([#4289](https://github.com/Microsoft/fast/issues/4289)) ([df6f765](https://github.com/Microsoft/fast/commit/df6f7652083ea71e3419976281ee393744606018))
+
+
+
+
+
 ## [0.21.1](https://github.com/Microsoft/fast/compare/@microsoft/fast-element@0.21.0...@microsoft/fast-element@0.21.1) (2020-12-16)
 
 **Note:** Version bump only for package @microsoft/fast-element

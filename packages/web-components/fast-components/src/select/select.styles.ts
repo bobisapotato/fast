@@ -9,7 +9,6 @@ import { SystemColors } from "@microsoft/fast-web-utilities";
 import { elevation } from "../styles/elevation";
 import {
     accentFillActiveBehavior,
-    accentFillFocusBehavior,
     accentFillHoverBehavior,
     accentFillRestBehavior,
     accentForegroundCutRestBehavior,
@@ -34,12 +33,13 @@ export const SelectStyles = css`
         border: calc(var(--outline-width) * 1px) solid ${accentFillRestBehavior.var};
         box-sizing: border-box;
         color: ${neutralForegroundRestBehavior.var};
-        contain: contents;
+        font-family: var(--body-font);
         height: calc(${heightNumber} * 1px);
         position: relative;
         user-select: none;
         min-width: 250px;
         outline: none;
+        vertical-align: top;
     }
 
     .listbox {
@@ -69,9 +69,9 @@ export const SelectStyles = css`
         cursor: pointer;
         display: flex;
         font-size: var(--type-ramp-base-font-size);
-        font: inherit;
+        font-family: inherit;
         line-height: var(--type-ramp-base-line-height);
-        min-height: calc(${heightNumber} * 1px);
+        min-height: 100%;
         padding: 0 calc(var(--design-unit) * 2.25px);
         width: 100%;
     }
@@ -104,6 +104,7 @@ export const SelectStyles = css`
 
     :host([disabled]) .control {
         cursor: ${disabledCursor};
+        user-select: none;
     }
 
     :host([disabled]:hover) {
@@ -140,9 +141,12 @@ export const SelectStyles = css`
     }
 
     .selected-value {
-        font-family: var(--body-font);
         flex: 1 1 auto;
+        font-family: inherit;
         text-align: start;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .indicator {

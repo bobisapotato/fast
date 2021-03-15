@@ -1,16 +1,14 @@
 name: CI - FAST Validation
 
 on:
-  push:
-    braches:
+  push: 
+    branches:
     - master
-    - releases/*
-    - features/*
   schedule:
-  - cron: 0 7 * * 3
+    - cron: 0 7 * * 3
   
 jobs:
-  build_linux:
+  linux_cross-platform_cross-browser:
     runs-on: [ubuntu-latest]
     
     steps:
@@ -41,26 +39,25 @@ jobs:
     - name: Testing unit tests
       run: yarn lerna run test --stream
 
-    - name: Collect and upload code coverage to Code Climate
-      uses: paambaati/codeclimate-action@v2.6.0
-
-      env:
-        CC_TEST_REPORTER_ID: 08a773cb4ea5811add5a45e12873e5cd2634c005568705cc37abfd5217617a32
+    - name: Test Playwright
+      run: |
+        cd packages/web-components/fast-components
+        npm install playwright
+        yarn test-chromium:pw 
+        yarn test-firefox:pw 
+        yarn test-webkit:pw
+      
+    - name: Initialize CodeQL
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      uses: github/codeql-action/init@v1
       with:
-        coverageCommand: yarn lerna run coverage
-        coverageLocations: |
-          ${{github.workspace}}/packages/tooling/fast-tooling/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-react/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-wasm/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-figma-plugin-msft/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-animation/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-colors/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-web-utilities/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-eslint-rules/coverage/lcov.info:lcov
-          ${{github.workspace}}/sites/fast-component-explorer/coverage/lcov.info:lcov
-        debug: false
+        languages: javascript, typescript
 
-  build-windows:
+    - name: Perform CodeQL Analysis
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      uses: github/codeql-action/analyze@v1
+
+  windows_cross-platform_cross-browser:
     runs-on: [windows-latest]
 
     steps:
@@ -99,27 +96,16 @@ jobs:
 
     - name: Testing unit tests
       run: yarn lerna run test --stream
+     
+    - name: Test Playwright
+      run: |
+        cd packages/web-components/fast-components
+        npm install playwright
+        yarn test-chromium:pw 
+        yarn test-firefox:pw 
+        yarn test-webkit:pw
 
-    - name: Collect and upload code coverage to Code Climate
-      uses: paambaati/codeclimate-action@v2.6.0
-
-      env:
-        CC_TEST_REPORTER_ID: 08a773cb4ea5811add5a45e12873e5cd2634c005568705cc37abfd5217617a32
-      with:
-        coverageCommand: yarn lerna run coverage
-        coverageLocations: |
-          ${{github.workspace}}/packages/tooling/fast-tooling/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-react/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-wasm/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-figma-plugin-msft/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-animation/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-colors/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-web-utilities/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-eslint-rules/coverage/lcov.info:lcov
-          ${{github.workspace}}/sites/fast-component-explorer/coverage/lcov.info:lcov
-        debug: false
-
-  build-macos:
+  macos_cross-platform_cross-browser:
     runs-on: [macos-latest]
 
     steps:
@@ -140,7 +126,7 @@ jobs:
 
     - name: Install package dependencies
       run: yarn install --frozen-lockfile --ignore-scripts
-
+    
     - name: Prepare workspaces
       run: yarn prepare
 
@@ -150,21 +136,10 @@ jobs:
     - name: Testing unit tests
       run: yarn lerna run test --stream
 
-    - name: Collect and upload code coverage to Code Climate
-      uses: paambaati/codeclimate-action@v2.6.0
-
-      env:
-        CC_TEST_REPORTER_ID: 08a773cb4ea5811add5a45e12873e5cd2634c005568705cc37abfd5217617a32
-      with:
-        coverageCommand: yarn lerna run coverage
-        coverageLocations: |
-          ${{github.workspace}}/packages/tooling/fast-tooling/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-react/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-tooling-wasm/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/tooling/fast-figma-plugin-msft/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-animation/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-colors/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-web-utilities/coverage/lcov.info:lcov
-          ${{github.workspace}}/packages/utilities/fast-eslint-rules/coverage/lcov.info:lcov
-          ${{github.workspace}}/sites/fast-component-explorer/coverage/lcov.info:lcov
-        debug: false
+    - name: Test Playwright
+      run: |
+        cd packages/web-components/fast-components
+        npm install playwright
+        yarn test-chromium:pw 
+        yarn test-firefox:pw 
+        yarn test-webkit:pw

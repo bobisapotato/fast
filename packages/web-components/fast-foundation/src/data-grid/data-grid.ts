@@ -17,8 +17,8 @@ import {
     keyCodePageDown,
     keyCodePageUp,
 } from "@microsoft/fast-web-utilities";
-import { DataGridCell } from "./data-grid-cell";
-import { DataGridRow } from "./data-grid-row";
+import type { DataGridCell } from "./data-grid-cell";
+import type { DataGridRow } from "./data-grid-row";
 import { DataGridRowTypes, GenerateHeaderOptions } from "./data-grid.options";
 
 export { DataGridRowTypes, GenerateHeaderOptions };
@@ -248,12 +248,20 @@ export class DataGrid extends FASTElement {
     }
 
     /**
-     * The default cell item template.  Set by the component templates.
+     * The default row item template.  Set by the component templates.
      *
      * @internal
      */
     @observable
     public defaultRowItemTemplate: ViewTemplate;
+
+    /**
+     * Component prefix (ie. "fast" vs. "fluent" vs. "<mylib>").  Set by the component templates.
+     *
+     * @internal
+     */
+    @observable
+    public prefix: string;
 
     /**
      * Children that are rows
@@ -531,7 +539,7 @@ export class DataGrid extends FASTElement {
 
         if (this.generateHeader !== GenerateHeaderOptions.none) {
             const generatedHeaderElement: HTMLElement = document.createElement(
-                "fast-data-grid-row"
+                `${this.prefix}-data-grid-row`
             );
             this.generatedHeader = (generatedHeaderElement as unknown) as DataGridRow;
             this.generatedHeader.columnDefinitions = this.columnDefinitions;

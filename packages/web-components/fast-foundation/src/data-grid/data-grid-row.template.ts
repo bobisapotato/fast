@@ -1,5 +1,6 @@
-import { children, elements, html, slotted, ViewTemplate } from "@microsoft/fast-element";
-import { DataGridRow } from "./data-grid-row";
+import { children, elements, html, slotted } from "@microsoft/fast-element";
+import type { ViewTemplate } from "@microsoft/fast-element";
+import type { DataGridRow } from "./data-grid-row";
 
 function createCellItemTemplate(prefix: string): ViewTemplate {
     return html`
@@ -17,7 +18,7 @@ function createHeaderCellItemTemplate(prefix: string): ViewTemplate {
         cell-type="columnheader"
         grid-column="${(x, c) => c.index + 1}"
         :columnDefinition="${x => x}"
-    ></${prefix}-data-grid-header-cell>
+    ></${prefix}-data-grid-cell>
 `;
 }
 
@@ -28,12 +29,14 @@ function createHeaderCellItemTemplate(prefix: string): ViewTemplate {
  * @public
  */
 export function createDataGridRowTemplate(prefix: string): ViewTemplate {
+    const cellItemTemplate: ViewTemplate = createCellItemTemplate(prefix);
+    const headerCellItemTemplate: ViewTemplate = createHeaderCellItemTemplate(prefix);
     return html<DataGridRow>`
         <template
-            :defaultCellItemTemplate=${createCellItemTemplate(prefix)}
-            :defaultHeaderCellItemTemplate=${createHeaderCellItemTemplate(prefix)}
             role="row"
             class="${x => (x.rowType !== "default" ? x.rowType : "")}"
+            :defaultCellItemTemplate="${cellItemTemplate}"
+            :defaultHeaderCellItemTemplate="${headerCellItemTemplate}"
             ${children({
                 property: "cellElements",
                 filter: elements('[role="cell"],[role="gridcell"],[role="columnheader"]'),

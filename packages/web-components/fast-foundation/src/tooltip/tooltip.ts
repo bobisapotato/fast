@@ -1,6 +1,10 @@
 import { attr, DOM, FASTElement, observable } from "@microsoft/fast-element";
 import { Direction, keyCodeEscape } from "@microsoft/fast-web-utilities";
-import { AnchoredRegion, AxisPositioningMode, AxisScalingMode } from "../anchored-region";
+import type {
+    AnchoredRegion,
+    AxisPositioningMode,
+    AxisScalingMode,
+} from "../anchored-region";
 import { getDirection } from "../utilities/";
 import { TooltipPosition } from "./tooltip.options";
 
@@ -361,6 +365,12 @@ export class Tooltip extends FASTElement {
      *  Gets the anchor element by id
      */
     private getAnchor = (): HTMLElement | null => {
+        const rootNode = this.getRootNode();
+
+        if (rootNode instanceof ShadowRoot) {
+            return rootNode.getElementById(this.anchor);
+        }
+
         return document.getElementById(this.anchor);
     };
 

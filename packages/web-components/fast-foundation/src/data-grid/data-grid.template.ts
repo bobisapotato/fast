@@ -1,5 +1,6 @@
-import { children, elements, html, ViewTemplate } from "@microsoft/fast-element";
-import { DataGrid } from "./data-grid";
+import { children, elements, html } from "@microsoft/fast-element";
+import type { ViewTemplate } from "@microsoft/fast-element";
+import type { DataGrid } from "./data-grid";
 
 function createRowItemTemplate(prefix: string): ViewTemplate {
     return html`
@@ -18,11 +19,13 @@ function createRowItemTemplate(prefix: string): ViewTemplate {
  * @public
  */
 export function createDataGridTemplate(prefix: string): ViewTemplate {
+    const rowItemTemplate: ViewTemplate = createRowItemTemplate(prefix);
     return html<DataGrid>`
         <template
             role="grid"
             tabindex="0"
-            :defaultRowItemTemplate=${createRowItemTemplate(prefix)}
+            :prefix=${prefix}
+            :defaultRowItemTemplate="${rowItemTemplate}"
             ${children({
                 property: "rowElements",
                 filter: elements("[role=row]"),

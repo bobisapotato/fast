@@ -15,6 +15,7 @@ import { BreadcrumbItem } from '@microsoft/fast-foundation';
 import { Button } from '@microsoft/fast-foundation';
 import { Checkbox } from '@microsoft/fast-foundation';
 import { ColorRGBA64 } from '@microsoft/fast-colors';
+import { Combobox } from '@microsoft/fast-foundation';
 import { DataGrid } from '@microsoft/fast-foundation';
 import { DataGridCell } from '@microsoft/fast-foundation';
 import { DataGridRow } from '@microsoft/fast-foundation';
@@ -24,6 +25,7 @@ import { Direction } from '@microsoft/fast-web-utilities';
 import { Disclosure } from '@microsoft/fast-foundation';
 import { Divider } from '@microsoft/fast-foundation';
 import { Flipper } from '@microsoft/fast-foundation';
+import { HorizontalScroll } from '@microsoft/fast-foundation';
 import { Listbox } from '@microsoft/fast-foundation';
 import { ListboxOption } from '@microsoft/fast-foundation';
 import { Menu } from '@microsoft/fast-foundation';
@@ -236,6 +238,9 @@ export const CardStyles: import("@microsoft/fast-element").ElementStyles;
 export const CheckboxStyles: import("@microsoft/fast-element").ElementStyles;
 
 // @public
+export const ComboboxStyles: import("@microsoft/fast-element").ElementStyles;
+
+// @public
 export function createColorPalette(baseColor: any): string[];
 
 // @public
@@ -320,6 +325,10 @@ export class FASTCheckbox extends Checkbox {
 }
 
 // @public
+export class FASTCombobox extends Combobox {
+}
+
+// @public
 export class FASTDataGrid extends DataGrid {
 }
 
@@ -361,6 +370,14 @@ export interface FASTDesignSystem {
     direction: Direction;
     disabledOpacity: number;
     focusOutlineWidth: number;
+    // (undocumented)
+    neutralContrastFillActiveDelta: number;
+    // (undocumented)
+    neutralContrastFillFocusDelta: number;
+    // (undocumented)
+    neutralContrastFillHoverDelta: number;
+    // (undocumented)
+    neutralContrastFillRestDelta: number;
     neutralDividerRestDelta: number;
     // (undocumented)
     neutralFillActiveDelta: number;
@@ -473,6 +490,10 @@ export class FASTDesignSystemProvider extends DesignSystemProvider implements FA
     direction: Direction;
     disabledOpacity: number;
     focusOutlineWidth: number;
+    neutralContrastFillActiveDelta: number;
+    neutralContrastFillFocusDelta: number;
+    neutralContrastFillHoverDelta: number;
+    neutralContrastFillRestDelta: number;
     neutralDividerRestDelta: number;
     neutralFillActiveDelta: number;
     neutralFillCardDelta: number;
@@ -546,6 +567,12 @@ export class FASTDivider extends Divider {
 
 // @public
 export class FASTFlipper extends Flipper {
+}
+
+// @public
+export class FASTHorizontalScroll extends HorizontalScroll {
+    // (undocumented)
+    connectedCallback(): void;
 }
 
 // @public
@@ -667,6 +694,41 @@ export const MenuItemStyles: import("@microsoft/fast-element").ElementStyles;
 
 // @public
 export const MenuStyles: import("@microsoft/fast-element").ElementStyles;
+
+// Warning: (ae-internal-missing-underscore) The name "neutralContrastFill" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const neutralContrastFill: SwatchFamilyResolver;
+
+// Warning: (ae-internal-missing-underscore) The name "neutralContrastFillActive" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const neutralContrastFillActive: SwatchRecipe;
+
+// @public
+export const neutralContrastFillActiveBehavior: import("@microsoft/fast-foundation").CSSCustomPropertyBehavior;
+
+// @public
+export const neutralContrastFillFocusBehavior: import("@microsoft/fast-foundation").CSSCustomPropertyBehavior;
+
+// Warning: (ae-internal-missing-underscore) The name "neutralContrastFillHover" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const neutralContrastFillHover: SwatchRecipe;
+
+// @public
+export const neutralContrastFillHoverBehavior: import("@microsoft/fast-foundation").CSSCustomPropertyBehavior;
+
+// Warning: (ae-internal-missing-underscore) The name "neutralContrastFillRest" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const neutralContrastFillRest: SwatchRecipe;
+
+// @public
+export const neutralContrastFillRestBehavior: import("@microsoft/fast-foundation").CSSCustomPropertyBehavior;
+
+// @public
+export const neutralContrastForegroundRestBehavior: import("@microsoft/fast-foundation").CSSCustomPropertyBehavior;
 
 // Warning: (ae-internal-missing-underscore) The name "neutralDividerRest" should be prefixed with an underscore because the declaration is marked as @internal
 //
