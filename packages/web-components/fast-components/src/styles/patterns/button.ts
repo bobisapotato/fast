@@ -62,6 +62,8 @@ export const BaseButtonStyles = css`
         fill: inherit;
         cursor: inherit;
         font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
     }
 
     :host(:hover) {
@@ -105,6 +107,7 @@ export const BaseButtonStyles = css`
             replace when adaptive typography is figured out */ ""
         } width: 16px;
         height: 16px;
+        pointer-events: none;
     }
 
     .start {

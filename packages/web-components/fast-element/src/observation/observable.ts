@@ -1,7 +1,8 @@
 import { DOM } from "../dom";
-import { Notifier, PropertyChangeNotifier, SubscriberSet, Subscriber } from "./notifier";
+import { PropertyChangeNotifier, SubscriberSet } from "./notifier";
+import type { Notifier, Subscriber } from "./notifier";
 
-const volatileRegex = /(\:|\&\&|\|\||if)/;
+const volatileRegex = /(:|&&|\|\||if)/;
 const notifierLookup = new WeakMap<any, Notifier>();
 const accessorLookup = new WeakMap<any, Accessor[]>();
 let watcher: BindingObserverImplementation | undefined = void 0;
@@ -195,6 +196,7 @@ export const Observable = Object.freeze({
         initialSubscriber?: Subscriber,
         isVolatileBinding: boolean = this.isVolatileBinding(binding)
     ): BindingObserver<TSource, TReturn, TParent> {
+        /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
         return new BindingObserverImplementation(
             binding,
             initialSubscriber,
@@ -235,7 +237,11 @@ export function observable(target: {}, nameOrAccessor: string | Accessor): void 
  * @param name - The existing descriptor.
  * @public
  */
-export function volatile(target: {}, name, descriptor) {
+export function volatile(
+    target: {},
+    name: string | Accessor,
+    descriptor: PropertyDescriptor
+): PropertyDescriptor {
     return Object.assign({}, descriptor, {
         get: function (this: any) {
             trackVolatile();
@@ -346,9 +352,22 @@ export type Binding<TSource = any, TReturn = any, TParent = any> = (
     context: ExecutionContext<TParent>
 ) => TReturn;
 
-interface SubscriptionRecord {
+/**
+ * A record of observable property access.
+ * @public
+ */
+export interface ObservationRecord {
+    /**
+     * The source object with an observable property that was accessed.
+     */
     propertySource: any;
+
+    /**
+     * The name of the observable property on {@link ObservationRecord.propertySource} that was accessed.
+     */
     propertyName: string;
+}
+interface SubscriptionRecord extends ObservationRecord {
     notifier: Notifier;
     next: SubscriptionRecord | undefined;
 }
@@ -371,6 +390,12 @@ export interface BindingObserver<TSource = any, TReturn = any, TParent = any>
      * Unsubscribe from all dependent observables of the binding.
      */
     disconnect(): void;
+
+    /**
+     * Gets {@link ObservationRecord|ObservationRecords} that the {@link BindingObserver}
+     * is observing.
+     */
+    records(): IterableIterator<ObservationRecord>;
 }
 
 class BindingObserverImplementation<TSource = any, TReturn = any, TParent = any>
@@ -418,7 +443,7 @@ class BindingObserverImplementation<TSource = any, TReturn = any, TParent = any>
             }
 
             this.last = null;
-            this.needsRefresh = true;
+            this.needsRefresh = this.needsQueue = true;
         }
     }
 
@@ -465,5 +490,28 @@ class BindingObserverImplementation<TSource = any, TReturn = any, TParent = any>
             this.needsQueue = true;
             this.notify(this);
         }
+    }
+
+    public records(): IterableIterator<ObservationRecord> {
+        let next = this.first;
+
+        return {
+            next: () => {
+                const current = next;
+
+                if (current === undefined) {
+                    return { value: void 0, done: true };
+                } else {
+                    next = next.next!;
+                    return {
+                        value: current,
+                        done: false,
+                    };
+                }
+            },
+            [Symbol.iterator]: function () {
+                return this;
+            },
+        };
     }
 }

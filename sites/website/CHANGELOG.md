@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/microsoft/fast-dna/compare/fast-site@0.6.1...fast-site@0.6.2) (2021-04-06)
+
+**Note:** Version bump only for package fast-site
+
+
+
+
+
+## [0.6.1](https://github.com/microsoft/fast-dna/compare/fast-site@0.6.0...fast-site@0.6.1) (2021-03-16)
+
+
+### Bug Fixes
+
+* broken formatting and link when generating docs site ([#4459](https://github.com/microsoft/fast-dna/issues/4459)) ([e817863](https://github.com/microsoft/fast-dna/commit/e81786349e7c65cfb888a151f0400c736c421912))
+
+
+
+
+
 # [0.6.0](https://github.com/microsoft/fast/compare/fast-site@0.5.2...fast-site@0.6.0) (2021-03-06)
 
 

@@ -1,7 +1,73 @@
-# Change Log
+# Change Log - @microsoft/fast-tooling-react
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This log was last generated on Sun, 02 May 2021 07:18:00 GMT and should not be manually modified.
+
+<!-- Start content -->
+
+## 2.8.6
+
+Sun, 02 May 2021 07:18:00 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling to v0.19.0 (44823142+williamw2@users.noreply.github.com)
+
+## 2.8.5
+
+Thu, 29 Apr 2021 07:19:40 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling to v0.18.3 (7559015+janechu@users.noreply.github.com)
+
+## 2.8.4
+
+Sun, 25 Apr 2021 07:21:02 GMT
+
+### Patches
+
+- CSS control update to override inner web component widths (7559015+janechu@users.noreply.github.com)
+
+## 2.8.3
+
+Thu, 22 Apr 2021 07:21:10 GMT
+
+### Patches
+
+- Moving Color Picker (44823142+williamw2@users.noreply.github.com)
+- adjust categories to allow them to work on linked data (7559015+janechu@users.noreply.github.com)
+
+## 2.8.1
+
+Fri, 16 Apr 2021 01:19:08 GMT
+
+### Patches
+
+- fix: update styling to fit the width of the area the form is placed in (7559015+janechu@users.noreply.github.com)
+
+## [2.7.1](https://github.com/Microsoft/fast/compare/@microsoft/fast-tooling-react@2.7.0...@microsoft/fast-tooling-react@2.7.1) (2021-03-18)
+
+**Note:** Version bump only for package @microsoft/fast-tooling-react
+
+
+
+
+
+# [2.7.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-tooling-react@2.6.0...@microsoft/fast-tooling-react@2.7.0) (2021-03-16)
+
+
+### Bug Fixes
+
+* update the navigation display text to use a custom property in the data ([#4426](https://github.com/Microsoft/fast/issues/4426)) ([0e4308e](https://github.com/Microsoft/fast/commit/0e4308eca1dd482413d32051a448cc35015ddb3b))
+
+
+### Features
+
+* add categories for the form ([#4436](https://github.com/Microsoft/fast/issues/4436)) ([ad4480a](https://github.com/Microsoft/fast/commit/ad4480ae1157e9a4ac8fd8baa9dfe47346740409)), closes [#2530](https://github.com/Microsoft/fast/issues/2530) [#2575](https://github.com/Microsoft/fast/issues/2575)
+
+
+
+
 
 # [2.6.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-tooling-react@2.5.5...@microsoft/fast-tooling-react@2.6.0) (2021-03-06)
 

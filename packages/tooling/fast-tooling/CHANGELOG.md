@@ -1,7 +1,52 @@
-# Change Log
+# Change Log - @microsoft/fast-tooling
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This log was last generated on Sun, 02 May 2021 07:18:00 GMT and should not be manually modified.
+
+<!-- Start content -->
+
+## 0.19.0
+
+Sun, 02 May 2021 07:18:00 GMT
+
+### Minor changes
+
+- adding html render web component to fast-tooling (44823142+williamw2@users.noreply.github.com)
+
+## 0.18.3
+
+Thu, 29 Apr 2021 07:19:40 GMT
+
+### Patches
+
+- fix an incorrect definition name which for default slots should be an empty string (7559015+janechu@users.noreply.github.com)
+
+## 0.18.2
+
+Sun, 25 Apr 2021 07:21:02 GMT
+
+### Patches
+
+- Bump @microsoft/fast-foundation to v1.20.0 (nicholasrice@users.noreply.github.com)
+
+## 0.18.1
+
+Thu, 22 Apr 2021 07:21:10 GMT
+
+### Patches
+
+- Moving Color Picker (44823142+williamw2@users.noreply.github.com)
+- Moving native definitions to fast-tooling (44823142+williamw2@users.noreply.github.com)
+
+## [0.16.1](https://github.com/Microsoft/fast/compare/@microsoft/fast-tooling@0.16.0...@microsoft/fast-tooling@0.16.1) (2021-03-16)
+
+
+### Bug Fixes
+
+* update the navigation display text to use a custom property in the data ([#4426](https://github.com/Microsoft/fast/issues/4426)) ([0e4308e](https://github.com/Microsoft/fast/commit/0e4308eca1dd482413d32051a448cc35015ddb3b))
+
+
+
+
 
 # [0.16.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-tooling@0.15.2...@microsoft/fast-tooling@0.16.0) (2021-03-06)
 

@@ -1,17 +1,18 @@
 import { attr, DOM, FASTElement, observable } from "@microsoft/fast-element";
-import { Direction } from "@microsoft/fast-web-utilities";
+import type {
+    ConstructibleResizeObserver,
+    ResizeObserverClassDefinition,
+} from "./resize-observer";
+import { Direction, eventResize, eventScroll } from "@microsoft/fast-web-utilities";
+
 import { getDirection } from "../utilities";
 import { IntersectionService } from "./intersection-service";
+import type { ResizeObserverEntry } from "./resize-observer-entry";
 
 // TODO: the Resize Observer related files are a temporary stopgap measure until
 // Resize Observer types are pulled into TypeScript, which seems imminent
 // At that point these files should be deleted.
 // https://github.com/microsoft/TypeScript/issues/37861
-import type {
-    ConstructibleResizeObserver,
-    ResizeObserverClassDefinition,
-} from "./resize-observer";
-import type { ResizeObserverEntry } from "./resize-observer-entry";
 
 declare global {
     interface WindowWithResizeObserver extends Window {
@@ -46,6 +47,20 @@ export type HorizontalPosition = "start" | "end" | "left" | "right" | "unset";
  * @beta
  */
 export type VerticalPosition = "top" | "bottom" | "unset";
+
+/**
+ * Defines if the component updates its position automatically. Calling update() always provokes an update.
+ * anchor - the component only updates its position when the anchor resizes (default)
+ * auto - the component updates its position when:
+ * - update() is called
+ * - the anchor resizes
+ * - the window resizes
+ * - the viewport resizes
+ * - any scroll event in the document
+ *
+ * @beta
+ */
+export type AutoUpdateMode = "anchor" | "auto";
 
 /**
  * @internal
@@ -283,6 +298,33 @@ export class AnchoredRegion extends FASTElement {
     }
 
     /**
+     *
+     *
+     * @beta
+     * @remarks
+     * HTML Attribute: auto-update-mode
+     */
+    @attr({ attribute: "auto-update-mode" })
+    public autoUpdateMode: AutoUpdateMode = "anchor";
+    private autoUpdateModeChanged(
+        prevMode: AutoUpdateMode,
+        newMode: AutoUpdateMode
+    ): void {
+        if (
+            (this as FASTElement).$fastController.isConnected &&
+            this.initialLayoutComplete
+        ) {
+            if (prevMode === "auto") {
+                this.stopAutoUpdateEventListeners();
+            }
+
+            if (newMode === "auto") {
+                this.startAutoUpdateEventListeners();
+            }
+        }
+    }
+
+    /**
      * The HTML element being used as the anchor
      *
      * @beta
@@ -350,6 +392,9 @@ export class AnchoredRegion extends FASTElement {
     private resizeDetector: ResizeObserverClassDefinition | null = null;
 
     private viewportRect: ClientRect | DOMRect | null;
+    private anchorRect: ClientRect | DOMRect | null;
+    private regionRect: ClientRect | DOMRect | null;
+
     private regionDimension: Dimension;
 
     private anchorTop: number;
@@ -369,6 +414,11 @@ export class AnchoredRegion extends FASTElement {
     private pendingLayoutUpdate: boolean = false;
     private pendingReset: boolean = false;
     private currentDirection: Direction = Direction.ltr;
+    private regionVisible: boolean = false;
+
+    // defines how big a difference in pixels there must be between states to
+    // justify a layout update that affects the dom (prevents repeated sub-pixel corrections)
+    private updateThreshold: number = 0.5;
 
     private static intersectionService: IntersectionService = new IntersectionService();
 
@@ -377,6 +427,9 @@ export class AnchoredRegion extends FASTElement {
      */
     connectedCallback() {
         super.connectedCallback();
+        if (this.autoUpdateMode === "auto") {
+            this.startAutoUpdateEventListeners();
+        }
         this.initialize();
     }
 
@@ -385,7 +438,9 @@ export class AnchoredRegion extends FASTElement {
      */
     public disconnectedCallback(): void {
         super.disconnectedCallback();
-
+        if (this.autoUpdateMode === "auto") {
+            this.stopAutoUpdateEventListeners();
+        }
         this.stopObservers();
         this.disconnectResizeDetector();
     }
@@ -423,7 +478,7 @@ export class AnchoredRegion extends FASTElement {
         this.anchorTop = this.anchorTop + verticalOffsetDelta;
         this.anchorBottom = this.anchorBottom + verticalOffsetDelta;
 
-        this.requestLayoutUpdate();
+        this.updateLayout();
     };
 
     /**
@@ -475,7 +530,7 @@ export class AnchoredRegion extends FASTElement {
     private requestLayoutUpdate(): void {
         if (this.pendingLayoutUpdate === false && this.pendingReset === false) {
             this.pendingLayoutUpdate = true;
-            DOM.queueUpdate(this.updateLayout);
+            DOM.queueUpdate(() => this.updateLayout());
         }
     }
 
@@ -489,7 +544,7 @@ export class AnchoredRegion extends FASTElement {
         ) {
             this.pendingLayoutUpdate = false;
             this.setInitialState();
-            DOM.queueUpdate(this.reset);
+            DOM.queueUpdate(() => this.reset());
             this.pendingReset = true;
         }
     }
@@ -499,6 +554,7 @@ export class AnchoredRegion extends FASTElement {
      */
     private setInitialState(): void {
         this.initialLayoutComplete = false;
+        this.regionVisible = false;
         this.regionTop = "0";
         this.regionRight = "0";
         this.regionBottom = "0";
@@ -510,6 +566,8 @@ export class AnchoredRegion extends FASTElement {
         this.yTransformOrigin = "top";
 
         this.viewportRect = null;
+        this.regionRect = null;
+        this.anchorRect = null;
         this.regionDimension = { height: 0, width: 0 };
 
         this.anchorTop = 0;
@@ -545,7 +603,6 @@ export class AnchoredRegion extends FASTElement {
 
         if (this.resizeDetector !== null) {
             this.resizeDetector.observe(this.anchorElement);
-            this.resizeDetector.observe(this);
         }
     };
 
@@ -626,21 +683,17 @@ export class AnchoredRegion extends FASTElement {
 
         this.pendingPositioningUpdate = false;
 
-        const regionRect: DOMRect | ClientRect | null = this.applyIntersectionEntries(
-            entries
-        );
-
-        if (regionRect === null) {
+        if (!this.applyIntersectionEntries(entries) || this.regionRect === null) {
             return;
         }
 
         if (!this.initialLayoutComplete) {
-            this.containingBlockHeight = regionRect.height;
-            this.containingBlockWidth = regionRect.width;
+            this.containingBlockHeight = this.regionRect.height;
+            this.containingBlockWidth = this.regionRect.width;
         }
 
-        this.updateRegionOffset(regionRect);
-        this.requestLayoutUpdate();
+        this.updateRegionOffset(this.regionRect);
+        this.updateLayout();
     };
 
     /**
@@ -648,20 +701,63 @@ export class AnchoredRegion extends FASTElement {
      */
     private applyIntersectionEntries = (
         entries: IntersectionObserverEntry[]
-    ): DOMRect | ClientRect | null => {
-        let regionRect: DOMRect | ClientRect | null = null;
-        entries.forEach((entry: IntersectionObserverEntry) => {
-            if (entry.target === this) {
-                this.handleRegionIntersection(entry);
-                regionRect = entry.boundingClientRect;
-            } else if (entry.target === this.anchorElement) {
-                this.handleAnchorIntersection(entry);
-            } else {
-                // its the viewport
-                this.viewportRect = entry.boundingClientRect;
-            }
-        });
-        return regionRect;
+    ): boolean => {
+        let regionEntry: IntersectionObserverEntry | undefined = entries.find(
+            x => x.target === this
+        );
+        let anchorEntry: IntersectionObserverEntry | undefined = entries.find(
+            x => x.target === this.anchorElement
+        );
+        let viewportEntry: IntersectionObserverEntry | undefined = entries.find(
+            x => x.target === this.viewportElement
+        );
+
+        if (
+            regionEntry === undefined ||
+            viewportEntry === undefined ||
+            anchorEntry === undefined
+        ) {
+            return false;
+        }
+
+        // don't update the dom unless there is a significant difference in rect positions
+        if (
+            this.regionRect === null ||
+            this.anchorRect === null ||
+            this.viewportRect === null ||
+            this.isRectDifferent(this.anchorRect, anchorEntry.boundingClientRect) ||
+            this.isRectDifferent(this.viewportRect, viewportEntry.boundingClientRect) ||
+            this.isRectDifferent(this.regionRect, regionEntry.boundingClientRect)
+        ) {
+            this.regionRect = regionEntry.boundingClientRect;
+            this.anchorRect = anchorEntry.boundingClientRect;
+            this.viewportRect = viewportEntry.boundingClientRect;
+
+            this.handleRegionIntersection(regionEntry);
+            this.handleAnchorIntersection(anchorEntry);
+
+            return true;
+        }
+
+        return false;
+    };
+
+    /**
+     *  compare rects to see if there is enough change to justify a DOM update
+     */
+    private isRectDifferent = (
+        rectA: DOMRect | ClientRect,
+        rectB: DOMRect | ClientRect
+    ): boolean => {
+        if (
+            Math.abs(rectA.top - rectB.top) > this.updateThreshold ||
+            Math.abs(rectA.right - rectB.right) > this.updateThreshold ||
+            Math.abs(rectA.bottom - rectB.bottom) > this.updateThreshold ||
+            Math.abs(rectA.left - rectB.left) > this.updateThreshold
+        ) {
+            return true;
+        }
+        return false;
     };
 
     /**
@@ -694,40 +790,8 @@ export class AnchoredRegion extends FASTElement {
         if (!this.initialLayoutComplete) {
             return;
         }
-        entries.forEach((entry: ResizeObserverEntry) => {
-            if (entry.target === this) {
-                this.handleRegionResize(entry);
-            } else {
-                this.update();
-            }
-        });
-    };
 
-    /**
-     *  Handle region resize events
-     */
-    private handleRegionResize = (entry: ResizeObserverEntry): void => {
-        switch (this.horizontalScaling) {
-            case "content":
-                this.regionDimension.width = entry.contentRect.width;
-                break;
-
-            case "anchor":
-                this.regionDimension.width = this.anchorWidth;
-                break;
-        }
-
-        switch (this.verticalScaling) {
-            case "content":
-                this.regionDimension.height = entry.contentRect.height;
-                break;
-
-            case "anchor":
-                this.regionDimension.height = this.anchorHeight;
-                break;
-        }
-
-        this.requestLayoutUpdate();
+        this.update();
     };
 
     /**
@@ -755,10 +819,6 @@ export class AnchoredRegion extends FASTElement {
      *  Recalculate layout related state values
      */
     private updateLayout = (): void => {
-        if (!this.pendingLayoutUpdate) {
-            return;
-        }
-
         this.pendingLayoutUpdate = false;
 
         let desiredVerticalPosition: AnchoredRegionVerticalPositionLabel = "undefined";
@@ -881,12 +941,23 @@ export class AnchoredRegion extends FASTElement {
 
         if (!this.initialLayoutComplete) {
             this.initialLayoutComplete = true;
-            this.style.removeProperty("opacity");
+            this.requestPositionUpdates();
+            return;
+        }
+
+        if (!this.regionVisible) {
+            this.regionVisible = true;
             this.style.removeProperty("pointer-events");
-            DOM.queueUpdate(() => this.$emit("loaded", this, { bubbles: false }));
+            this.style.removeProperty("opacity");
+            this.classList.toggle("loaded", true);
+            this.$emit("loaded", this, { bubbles: false });
         }
 
         if (positionChanged) {
+            // do a position check to ensure we're in the right spot
+            // temporary until method for recalculating offsets on position changes improved
+            this.requestPositionUpdates();
+            // emit change event
             this.$emit("positionchange", this, { bubbles: false });
         }
     };
@@ -1106,7 +1177,6 @@ export class AnchoredRegion extends FASTElement {
         if (this.horizontalInset) {
             return ["insetLeft", "insetRight"];
         }
-
         return ["left", "right"];
     };
 
@@ -1117,7 +1187,6 @@ export class AnchoredRegion extends FASTElement {
         if (this.verticalInset) {
             return ["insetTop", "insetBottom"];
         }
-
         return ["top", "bottom"];
     };
 
@@ -1193,5 +1262,27 @@ export class AnchoredRegion extends FASTElement {
         }
 
         return newRegionDimension;
+    };
+
+    /**
+     * starts event listeners that can trigger auto updating
+     */
+    private startAutoUpdateEventListeners = (): void => {
+        window.addEventListener(eventResize, this.update);
+        window.addEventListener(eventScroll, this.update, true);
+        if (this.resizeDetector !== null && this.viewportElement !== null) {
+            this.resizeDetector.observe(this.viewportElement);
+        }
+    };
+
+    /**
+     * stops event listeners that can trigger auto updating
+     */
+    private stopAutoUpdateEventListeners = (): void => {
+        window.removeEventListener(eventResize, this.update);
+        window.removeEventListener(eventScroll, this.update);
+        if (this.resizeDetector !== null && this.viewportElement !== null) {
+            this.resizeDetector.unobserve(this.viewportElement);
+        }
     };
 }

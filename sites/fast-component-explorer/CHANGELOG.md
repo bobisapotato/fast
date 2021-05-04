@@ -1,7 +1,71 @@
-# Change Log
+# Change Log - @microsoft/fast-component-explorer
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This log was last generated on Sun, 02 May 2021 07:18:00 GMT and should not be manually modified.
+
+<!-- Start content -->
+
+## 0.17.2
+
+Sun, 02 May 2021 07:18:00 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling-react to v2.8.6 (44823142+williamw2@users.noreply.github.com)
+
+## 0.17.2
+
+Thu, 29 Apr 2021 07:19:40 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling-react to v2.8.5 (7559015+janechu@users.noreply.github.com)
+
+## 0.17.2
+
+Sun, 25 Apr 2021 07:21:02 GMT
+
+### Patches
+
+- Bump @microsoft/site-utilities to v0.9.0 (nicholasrice@users.noreply.github.com)
+
+## 0.17.2
+
+Thu, 22 Apr 2021 07:21:10 GMT
+
+### Patches
+
+- Bump @microsoft/site-utilities to v0.9.0 (44823142+williamw2@users.noreply.github.com)
+
+## [0.17.2](https://github.com/Microsoft/fast/compare/@microsoft/fast-component-explorer@0.17.1...@microsoft/fast-component-explorer@0.17.2) (2021-04-06)
+
+
+### Bug Fixes
+
+* addresses an issue in the windows cross browser testing where scenarios were not found ([#4499](https://github.com/Microsoft/fast/issues/4499)) ([81db98a](https://github.com/Microsoft/fast/commit/81db98a739e9ca713be6ddd16f287502cfda4b65)), closes [#4495](https://github.com/Microsoft/fast/issues/4495)
+
+
+
+
+
+## [0.17.1](https://github.com/Microsoft/fast/compare/@microsoft/fast-component-explorer@0.17.0...@microsoft/fast-component-explorer@0.17.1) (2021-03-18)
+
+**Note:** Version bump only for package @microsoft/fast-component-explorer
+
+
+
+
+
+# [0.17.0](https://github.com/Microsoft/fast/compare/@microsoft/fast-component-explorer@0.16.4...@microsoft/fast-component-explorer@0.17.0) (2021-03-16)
+
+
+### Features
+
+* add categories for the form ([#4436](https://github.com/Microsoft/fast/issues/4436)) ([ad4480a](https://github.com/Microsoft/fast/commit/ad4480ae1157e9a4ac8fd8baa9dfe47346740409)), closes [#2530](https://github.com/Microsoft/fast/issues/2530) [#2575](https://github.com/Microsoft/fast/issues/2575)
+* add combobox scenario for component explorer ([#4460](https://github.com/Microsoft/fast/issues/4460)) ([dedd0e7](https://github.com/Microsoft/fast/commit/dedd0e789ef5dce6a4fce20321c58569a831f1d1))
+
+
+
+
 
 ## [0.16.4](https://github.com/Microsoft/fast/compare/@microsoft/fast-component-explorer@0.16.3...@microsoft/fast-component-explorer@0.16.4) (2021-03-06)
 

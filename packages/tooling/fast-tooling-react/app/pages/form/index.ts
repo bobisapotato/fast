@@ -12,6 +12,8 @@ import {
     checkboxSchema,
     childrenSchema,
     constSchema as constKeywordSchema,
+    controlPluginCssSchema,
+    controlPluginCssWithOverridesSchema,
     controlPluginSchema as customControlSchema,
     defaultsSchema,
     dictionarySchema,
@@ -32,6 +34,18 @@ import {
 
 export const category: ExampleComponent = {
     schema: categorySchema,
+};
+
+export const customControl: ExampleComponent = {
+    schema: customControlSchema,
+};
+
+export const controlPluginCssWithOverrides: ExampleComponent = {
+    schema: controlPluginCssWithOverridesSchema,
+};
+
+export const controlPluginCss: ExampleComponent = {
+    schema: controlPluginCssSchema,
 };
 
 export const textField: ExampleComponent = {
@@ -118,10 +132,6 @@ import DictionaryDataSet from "../../../src/__tests__/datasets/dictionary";
 export const dictionary: ExampleComponent = {
     schema: dictionarySchema,
     data: DictionaryDataSet,
-};
-
-export const customControl: ExampleComponent = {
-    schema: customControlSchema,
 };
 
 export const tooltip: ExampleComponent = {

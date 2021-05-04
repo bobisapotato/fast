@@ -1,7 +1,59 @@
-# Change Log
+# Change Log - @microsoft/site-utilities
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This log was last generated on Sun, 02 May 2021 07:18:00 GMT and should not be manually modified.
+
+<!-- Start content -->
+
+## 0.9.0
+
+Sun, 02 May 2021 07:18:00 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling-react to v2.8.6 (44823142+williamw2@users.noreply.github.com)
+
+## 0.9.0
+
+Thu, 29 Apr 2021 07:19:40 GMT
+
+### Patches
+
+- Bump @microsoft/fast-tooling-react to v2.8.5 (7559015+janechu@users.noreply.github.com)
+
+## 0.9.0
+
+Sun, 25 Apr 2021 07:21:02 GMT
+
+### Patches
+
+- Bump @microsoft/fast-components to v1.20.4 (nicholasrice@users.noreply.github.com)
+
+## 0.9.0
+
+Thu, 22 Apr 2021 07:21:10 GMT
+
+### Patches
+
+- Bump @microsoft/fast-components to v1.20.3 (chhol@microsoft.com)
+
+## [0.8.1](https://github.com/Microsoft/fast/compare/@microsoft/site-utilities@0.8.0...@microsoft/site-utilities@0.8.1) (2021-03-18)
+
+**Note:** Version bump only for package @microsoft/site-utilities
+
+
+
+
+
+# [0.8.0](https://github.com/Microsoft/fast/compare/@microsoft/site-utilities@0.7.4...@microsoft/site-utilities@0.8.0) (2021-03-16)
+
+
+### Features
+
+* add categories for the form ([#4436](https://github.com/Microsoft/fast/issues/4436)) ([ad4480a](https://github.com/Microsoft/fast/commit/ad4480ae1157e9a4ac8fd8baa9dfe47346740409)), closes [#2530](https://github.com/Microsoft/fast/issues/2530) [#2575](https://github.com/Microsoft/fast/issues/2575)
+
+
+
+
 
 ## [0.7.4](https://github.com/Microsoft/fast/compare/@microsoft/site-utilities@0.7.3...@microsoft/site-utilities@0.7.4) (2021-03-06)
 

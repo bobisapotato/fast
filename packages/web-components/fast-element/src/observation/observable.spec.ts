@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import { enableArrayObservation } from "./array-observer";
-import { SubscriberSet, PropertyChangeNotifier } from "./notifier";
-import { Observable, observable, defaultExecutionContext, volatile } from "./observable";
 import { DOM } from "../dom";
+import { enableArrayObservation } from "./array-observer";
+import { PropertyChangeNotifier, SubscriberSet } from "./notifier";
+import { defaultExecutionContext, Observable, observable, volatile } from "./observable";
 
 describe("The Observable", () => {
     class Model {
@@ -198,6 +198,36 @@ describe("The Observable", () => {
 
             value = observer.observe(model, defaultExecutionContext);
             expect(value).to.equal(model.child.value);
+        });
+        it("notifies on changes in a sub-property binding after disconnecting before notification has been processed", async () => {
+            const binding = (x: Model) => x.child.value;
+            let called = false;
+            const observer = Observable.binding(binding, {
+                handleChange() {
+                    called = true;
+                },
+            });
+
+            const model = new Model();
+            let value = observer.observe(model, defaultExecutionContext);
+            expect(value).to.equal(model.child.value);
+
+            expect(called).to.be.false;
+            model.child.value = "something completely different";
+            observer.disconnect();
+
+            await DOM.nextUpdate();
+
+            expect(called).to.be.false;
+
+            value = observer.observe(model, defaultExecutionContext);
+            expect(value).to.equal(model.child.value);
+
+            model.child.value = "another completely different thing";
+
+            await DOM.nextUpdate();
+
+            expect(called).to.be.true;
         });
 
         it("notifies on changes in a multi-property binding", async () => {
@@ -575,6 +605,28 @@ describe("The Observable", () => {
             await DOM.nextUpdate();
 
             expect(wasCalled).to.equal(false);
+        });
+
+
+        it("allows inspection of subscription records of used observables after observation", () => {
+            const observed = [{}, {}, {}].map(( x: any, i ) => {
+                Observable.defineProperty(x, "value");
+                x.value = i
+                return x;
+            });
+
+            function binding() {
+                return observed[0].value + observed[1].value + observed[2].value
+            }
+
+            const bindingObserver = Observable.binding(binding);
+            bindingObserver.observe({}, defaultExecutionContext);
+
+            let i = 0;
+            for (const record of bindingObserver.records()) {
+                expect(record.propertySource).to.equal(observed[i]);
+                i++;
+            }
         });
     });
 
